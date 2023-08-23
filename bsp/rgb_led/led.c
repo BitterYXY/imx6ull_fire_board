@@ -17,6 +17,11 @@ void led_init()
     R_LED->GDIR |=  (1<<R_LED_GPIO1_IO04);
     G_LED->GDIR |=  (1<<G_LED_GPIO4_IO20);
     B_LED->GDIR |=  (1<<B_LED_GPIO4_IO19);
+
+    /*trun off leds*/
+    R_LED->DR |= (1<<R_LED_GPIO1_IO04);
+    G_LED->DR |= (1<<G_LED_GPIO4_IO20);
+    B_LED->DR |= (1<<B_LED_GPIO4_IO19);
 }
 
 void led_red_on()
@@ -46,5 +51,19 @@ void led_blue_on()
 
 void led_blue_off()
 {
+    B_LED->DR |= (1<<B_LED_GPIO4_IO19);
+}
+
+void led_rgb_on()
+{
+    R_LED->DR &= ~(1<<R_LED_GPIO1_IO04);
+    G_LED->DR &= ~(1<<G_LED_GPIO4_IO20);
+    B_LED->DR &= ~(1<<B_LED_GPIO4_IO19);
+}
+
+void led_rgb_off()
+{
+    R_LED->DR |= (1<<R_LED_GPIO1_IO04);
+    G_LED->DR |= (1<<G_LED_GPIO4_IO20);
     B_LED->DR |= (1<<B_LED_GPIO4_IO19);
 }
