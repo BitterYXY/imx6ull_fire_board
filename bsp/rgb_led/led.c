@@ -1,6 +1,10 @@
 #include "imx6ull.h"
 #include "led.h"
 
+struct GPIO_TYPE* R_LED = (struct GPIO_TYPE*)GPIO1_BASE;
+struct GPIO_TYPE* G_LED = (struct GPIO_TYPE*)GPIO4_BASE;
+struct GPIO_TYPE* B_LED = (struct GPIO_TYPE*)GPIO4_BASE;
+
 void led_init()
 {
     /*led iomux mode*/

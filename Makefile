@@ -16,6 +16,22 @@ SRCDIRS			:=	project/fire_board_led \
 
 LDS				:= project/imx6ull.lds
 
+OBJDIR 			:= obj
+
+# Use "make V=1" to see the full commands
+ifeq ("$(origin V)", "command line")
+	KBUILD_VERBOSE = $(V)
+endif
+ifndef KBUILD_VERBOSE
+	KBUILD_VERBOSE = 0
+endif
+
+ifeq ($(KBUILD_VERBOSE), 1)
+	Q =
+else
+	Q = @
+endif
+
 INCLUDE			:= $(patsubst %, -I %, $(INCDIRS))
 SFILES			:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.S))
 CFILES			:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
@@ -23,8 +39,8 @@ CFILES			:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
 SFILENDIR		:= $(notdir $(SFILES))
 CFILENDIR		:= $(notdir $(CFILES))
 
-SOBJS			:= $(patsubst %, obj/%, $(SFILENDIR: .S=.o))
-COBJS			:= $(patsubst %, obj/%, $(CFILENDIR: .c=.o))
+SOBJS			:= $(patsubst %, $(OBJDIR)/%, $(SFILENDIR:.S=.o))
+COBJS			:= $(patsubst %, $(OBJDIR)/%, $(CFILENDIR:.c=.o))
 OBJS			:= $(SOBJS) $(COBJS)
 
 VPATH			:= $(SRCDIRS)
@@ -32,16 +48,24 @@ VPATH			:= $(SRCDIRS)
 
 TARGET			?= fire_board_led
 
+all: $(OBJDIR) $(TARGET).bin
+
+
 $(TARGET).bin : $(OBJS)
-	$(LD)	-T$(LDS) -o $(TARGET).elf $^
-	$(OBJCOPY)	-O binary -S -g $(TARGET).elf $@
+	$(Q)$(LD)	-T$(LDS) -o $(TARGET).elf $^
+	$(Q)$(OBJCOPY)	-O binary -S -g $(TARGET).elf $@
 
-$(SOBJS) : obj/%.o : %.S
-	$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
+$(SOBJS) : $(OBJDIR)/%.o : %.S
+	$(Q)$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
 
-$(COBJS) : obj/%.o : %.c
-	$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
+$(COBJS) : $(OBJDIR)/%.o : %.c
+	$(Q)$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
 
-.PHONY: clean
+
+.PHONY: clean $(OBJDIR)
+
+$(OBJDIR):
+	$(shell mkdir -p $(OBJDIR))
+
 clean:
-	rm -rf $(TARGET).elf $(TARGET).bin obj/
+	$(Q)rm -rf $(TARGET).elf $(TARGET).bin $(OBJDIR)/
