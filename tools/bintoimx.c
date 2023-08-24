@@ -17,8 +17,8 @@
 */
 void message_print(void)
 {	
-	printf("I.MX6ULL ...\r\n");
-	printf("Convert .bin to .imx file...\r\n");
+	//printf("I.MX6ULL ...\r\n");
+	//printf("Convert .bin to .imx file...\r\n");
 }
 
 int main(int argc, char *argv[])
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	fseek(fp, 0L, SEEK_END);
 	filelen = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
-	printf("file %s size = %dBytes\r\n", argv[1], filelen);
+	//printf("file %s size = %dBytes\r\n", argv[1], filelen);
 
 	//malloc buffer
 	buf = malloc(filelen + BIN_OFFSET);
@@ -83,11 +83,11 @@ int main(int argc, char *argv[])
 
 	//add IVT + boot data + DCD information
 	if(ddrsize == 0) {			//512M
-		printf("Board DDR SIZE: 512MB\r\n");
+		//printf("Board DDR SIZE: 512MB\r\n");
 		memcpy(buf, imx6_512mb_ivtdcd_table, sizeof(imx6_512mb_ivtdcd_table));
 	}
 	else if (ddrsize == 1) {	//256M
-		printf("Board DDR SIZE: 256MB\r\n");
+		//printf("Board DDR SIZE: 256MB\r\n");
 		memcpy(buf, imx6_256mb_ivtdcd_table, sizeof(imx6_256mb_ivtdcd_table));
 	}
 
