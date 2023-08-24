@@ -18,7 +18,7 @@
 void message_print(void)
 {	
 	printf("I.MX6ULL ...\r\n");
-	printf("Convert .bin file to .imx file...")
+	printf("Convert .bin file to .imx file...");
 }
 
 int main(int argc, char *argv[])
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	memset(name_buf, 0, name_len);
-	memcpy(name_buf, argv[1], name_len)
+	memcpy(name_buf, argv[1], name_len);
 	name_buf[name_len-3] = 'i';
 	name_buf[name_len-2] = 'm';
 	name_buf[name_len-1] = 'x';
@@ -120,8 +120,8 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 	free(buf);
-	free(name_buf)
+	free(name_buf);
 	fclose(fp);	
-	
+
 	return 0;	
 }
