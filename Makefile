@@ -2,6 +2,7 @@ CROSS_COMPILE	?= arm-none-eabi-
 CC				:= $(CROSS_COMPILE)gcc
 LD				:= $(CROSS_COMPILE)ld
 OBJCOPY			:= $(CROSS_COMPILE)objcopy
+GCC				:= gcc
 
 INCDIRS			:= 	include \
 					lib \
@@ -48,7 +49,7 @@ VPATH			:= $(SRCDIRS)
 
 TARGET			?= fire_board_led
 
-all: $(OBJDIR) $(TARGET).bin
+all: $(OBJDIR) $(TARGET).bin tools
 
 
 $(TARGET).bin : $(OBJS)
@@ -61,6 +62,11 @@ $(SOBJS) : $(OBJDIR)/%.o : %.S
 $(COBJS) : $(OBJDIR)/%.o : %.c
 	$(Q)$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
 
+tools: bintoimx
+
+bintoimx: tools/bintoimx.c
+	$(Q)$(GCC) $^ -o $@
+	$(shell ./bintoimx $(TARGET).bin)
 
 .PHONY: clean $(OBJDIR)
 
@@ -68,4 +74,4 @@ $(OBJDIR):
 	$(shell mkdir -p $(OBJDIR))
 
 clean:
-	$(Q)rm -rf $(TARGET).elf $(TARGET).bin $(OBJDIR)/
+	$(Q)rm -rf $(TARGET).elf $(TARGET).bin $(OBJDIR)/ $(TARGET).imx bintoimx
