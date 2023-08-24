@@ -18,7 +18,7 @@
 void message_print(void)
 {	
 	printf("I.MX6ULL ...\r\n");
-	printf("Convert .bin file to .imx file...");
+	printf("Convert .bin to .imx file...\r\n");
 }
 
 int main(int argc, char *argv[])

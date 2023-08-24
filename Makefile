@@ -49,7 +49,7 @@ VPATH			:= $(SRCDIRS)
 
 TARGET			?= fire_board_led
 
-all: $(OBJDIR) $(TARGET).bin tools
+all: $(OBJDIR) $(TARGET).bin tools imxfile
 
 
 $(TARGET).bin : $(OBJS)
@@ -66,12 +66,15 @@ tools: bintoimx
 
 bintoimx: tools/bintoimx.c
 	$(Q)$(GCC) $^ -o $@
-	$(shell ./bintoimx $(TARGET).bin)
 
-.PHONY: clean $(OBJDIR)
+
+.PHONY: clean $(OBJDIR) imxfile
 
 $(OBJDIR):
 	$(shell mkdir -p $(OBJDIR))
+
+imxfile:
+	$(shell ./bintoimx $(TARGET).bin)
 
 clean:
 	$(Q)rm -rf $(TARGET).elf $(TARGET).bin $(OBJDIR)/ $(TARGET).imx bintoimx
