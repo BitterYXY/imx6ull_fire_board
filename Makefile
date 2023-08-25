@@ -27,9 +27,9 @@ ifndef KBUILD_TARGET
 endif
 
 ifneq ($(KBUILD_TARGET), )
-	TARGET := $(KBUILD_TARGET);
+	TARGET := $(KBUILD_TARGET)
 else
-	TARGET := fire_board_led;
+	TARGET := fire_board_led
 endif
 
 
