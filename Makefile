@@ -4,21 +4,6 @@ LD				:= $(CROSS_COMPILE)ld
 OBJCOPY			:= $(CROSS_COMPILE)objcopy
 GCC				:= gcc
 
-INCDIRS			:= 	include \
-					lib \
-					bsp/clock \
-					bsp/rgb_led
-
-SRCDIRS			:=	project/fire_board_led \
-					lib \
-					bsp \
-					bsp/clock \
-					bsp/rgb_led
-
-LDS				:= project/imx6ull.lds
-
-OBJDIR 			:= obj
-
 # Use "make V=1" to see the full commands
 ifeq ("$(origin V)", "command line")
 	KBUILD_VERBOSE = $(V)
@@ -32,6 +17,42 @@ ifeq ($(KBUILD_VERBOSE), 1)
 else
 	Q = @
 endif
+
+# Use "make T=xxx" to compile specific target
+ifeq ("$(origin T)", "command line")
+	KBUILD_TARGET = $(T)
+endif
+ifndef KBUILD_TARGET
+	KBUILD_TARGET =
+endif
+
+ifneq ($(KBUILD_TARGET), )
+	TARGET := $(KBUILD_TARGET);
+else
+	TARGET := fire_board_led;
+endif
+
+
+INCDIRS			:= 	include \
+					lib \
+					bsp/clock \
+					bsp/rgb_led \
+					bsp/key \
+					bsp/beep
+
+
+SRCDIRS			:=	project/$(TARGET) \
+					lib \
+					bsp \
+					bsp/clock \
+					bsp/rgb_led \
+					bsp/key \
+					bsp/beep
+
+LDS				:= project/imx6ull.lds
+
+OBJDIR 			:= obj
+
 
 INCLUDE			:= $(patsubst %, -I %, $(INCDIRS))
 SFILES			:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.S))
@@ -47,9 +68,7 @@ OBJS			:= $(SOBJS) $(COBJS)
 VPATH			:= $(SRCDIRS)
 
 
-TARGET			?= fire_board_led
-
-all: $(OBJDIR) $(TARGET).bin tools imxfile
+$(TARGET): $(OBJDIR) $(TARGET).bin tools imxfile
 
 
 $(TARGET).bin : $(OBJS)

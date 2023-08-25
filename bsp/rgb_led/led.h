@@ -1,8 +1,6 @@
 #ifndef __LED_H__
 #define __LED_H__
 
-#include "imx6ull.h"
-
 /* RGB_LED module*/
 #define     R_LED_GPIO1_IO04    4
 #define     G_LED_GPIO4_IO20    20
