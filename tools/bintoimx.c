@@ -92,17 +92,20 @@ int main(int argc, char *argv[])
 	}
 
 	name_len = strlen(argv[1]);
-	name_buf = malloc(name_len);
+	name_buf = malloc(name_len+1);				//need to add '\0' to the filename string.
 	if(name_buf == NULL){
 		printf("Mem Malloc Failed!\r\n");
 		free(buf);
 		return -1;
 	}
-	memset(name_buf, 0, name_len);
+	memset(name_buf, 0, name_len+1);
 	memcpy(name_buf, argv[1], name_len);
 	name_buf[name_len-3] = 'i';
 	name_buf[name_len-2] = 'm';
 	name_buf[name_len-1] = 'x';
+
+	//printf("the .bin file %s\r\n", argv[1]);
+	//printf("the .imx file %s\r\n", name_buf);
 
 	fp = fopen(name_buf, "wb");		//create and open .imx file
 	if(fp == NULL){
