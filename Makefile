@@ -87,13 +87,17 @@ bintoimx: tools/bintoimx.c
 	$(Q)$(GCC) $^ -o $@
 
 
-.PHONY: clean $(OBJDIR) imxfile
+.PHONY: clean download $(OBJDIR) imxfile
 
 $(OBJDIR):
 	$(shell mkdir -p $(OBJDIR))
 
 imxfile:
 	$(shell ./bintoimx $(TARGET).bin)
+
+download:
+#	$(shell dd iflag=dsync oflag=dsync if=$(TARGET).imx of=/dev/sdb seek=2 1 > /dev/null 2>&1)
+	$(shell dd iflag=dsync oflag=dsync if=$(TARGET).imx of=/dev/sdb seek=2)
 
 clean:
 	$(Q)rm -rf $(TARGET).elf $(TARGET).bin $(OBJDIR)/ $(TARGET).imx bintoimx
