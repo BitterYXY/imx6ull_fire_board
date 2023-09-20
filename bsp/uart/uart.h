@@ -59,5 +59,17 @@ typedef struct
 #define     IOMUXC_SW_PAD_CTL_PAD_UART1_RX_DATA_UART1_RX    0x10b0
 
 
+void uart_disable(UART_TYPE *base);
+void uart_enable(UART_TYPE *base);
+#if 0
+void uart_softreset(UART_TYPE *base);
+#endif
+void putc(uchar_t c);
+void puts(char * str);
+uchar_t getc(void);
+void uart_setbaudrate(UART_TYPE *base, uint_t baudrate, uint_t srcclock_hz);
+void uart1_io_init(void);
+void uart1_USB_init(void);
+
 
 #endif

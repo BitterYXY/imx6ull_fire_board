@@ -38,7 +38,8 @@ INCDIRS			:= 	include \
 					bsp/clock \
 					bsp/rgb_led \
 					bsp/key \
-					bsp/beep
+					bsp/beep \
+					bsp/uart
 
 
 SRCDIRS			:=	project/$(TARGET) \
@@ -47,7 +48,8 @@ SRCDIRS			:=	project/$(TARGET) \
 					bsp/clock \
 					bsp/rgb_led \
 					bsp/key \
-					bsp/beep
+					bsp/beep \
+					bsp/uart
 
 LDS				:= project/imx6ull.lds
 
