@@ -78,10 +78,10 @@ $(TARGET).bin : $(OBJS)
 	$(Q)$(OBJCOPY)	-O binary -S -g $(TARGET).elf $@
 
 $(SOBJS) : $(OBJDIR)/%.o : %.S
-	$(Q)$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
+	$(Q)$(CC)	-Wall -nostdlib -fno-builtin -c -O2 $(INCLUDE) -o $@ $<
 
 $(COBJS) : $(OBJDIR)/%.o : %.c
-	$(Q)$(CC)	-Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $<
+	$(Q)$(CC)	-Wall -nostdlib -fno-builtin -c -O2 $(INCLUDE) -o $@ $<
 
 tools: bintoimx
 
