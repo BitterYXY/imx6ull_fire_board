@@ -10,7 +10,7 @@
 //01: Clock is on in run mode, but off in WAIT and STOP modes.
 //10: Reserved.
 //11: Clock is on during all modes, except STOP mode.
-
+/*
 #define     CCM_CCGR0       (__I uint32_t *)0x20c4068
 #define     CCM_CCGR1       (__I uint32_t *)0x20c406c
 #define     CCM_CCGR2       (__I uint32_t *)0x20c4070
@@ -18,7 +18,7 @@
 #define     CCM_CCGR4       (__I uint32_t *)0x20c4078
 #define     CCM_CCGR5       (__I uint32_t *)0x20c407c
 #define     CCM_CCGR6       (__I uint32_t *)0x20c4080
-
+*/
 
 
 
