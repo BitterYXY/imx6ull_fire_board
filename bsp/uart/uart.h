@@ -66,7 +66,7 @@ void uart_softreset(UART_TYPE *base);
 #endif
 void putc(uchar_t c);
 void puts(char * str);
-uchar_t getc(void);
+uchar_t getca(void);
 void uart_setbaudrate(UART_TYPE *base, uint_t baudrate, uint_t srcclock_hz);
 void uart1_io_init(void);
 void uart1_USB_init(void);

@@ -35,9 +35,11 @@ void clock_init(void)
         CCM->CCSR |= CCM_CCSR_PLL1_SW_CLK_SEL(1);
     }
 
-    CCM_ANALOG->PLL_ARM = CCM_ANALOG_PLL_ARM_ENABLE(1) | CCM_ANALOG_PLL_ARM_DIV_SELECT(88);
+    //CCM_ANALOG->PLL_ARM = CCM_ANALOG_PLL_ARM_ENABLE(1) | CCM_ANALOG_PLL_ARM_DIV_SELECT(88);
+    CCM_ANALOG->PLL_ARM |= CCM_ANALOG_PLL_ARM_DIV_SELECT(88);
     CCM->CCSR &= ~CCM_CCSR_PLL1_SW_CLK_SEL(1);
     CCM->CACRR = CCM_CACRR_ARM_PODF(1);
+    while((((CCM->CDHIPR) >> CCM_CDHIPR_ARM_PODF_BUSY_SHIFT) & 0x1) == 1) ;
 
     /*Setting pll2(sys pll) and its pfd*/
     reg = CCM_ANALOG->PFD_528;
@@ -62,10 +64,16 @@ void clock_init(void)
     CCM->CBCMR &= ~CCM_CBCMR_PRE_PERIPH_CLK_SEL(3);
     CCM->CBCMR |= CCM_CBCMR_PRE_PERIPH_CLK_SEL(1);
     CCM->CBCDR &= ~CCM_CBCDR_PERIPH_CLK_SEL(1);
-    while(CCM->CDHIPR & (1 << CCM_CDHIPR_PERIPH_CLK_SEL_BUSY_SHIFT));
+    //while(CCM->CDHIPR & (1 << CCM_CDHIPR_PERIPH_CLK_SEL_BUSY_SHIFT));
+    while((((CCM->CDHIPR) >> CCM_CDHIPR_PERIPH_CLK_SEL_BUSY_SHIFT) & 0x1) == 1) ;
+
+#if 0
+    //disable ahb_clk_root before change ahb podf, otherwise abnormal.
     CCM->CBCDR &= ~CCM_CBCDR_AHB_PODF(7);
     CCM->CBCDR |= CCM_CBCDR_AHB_PODF(2);
-    while(CCM->CDHIPR & (1 << CCM_CDHIPR_AHB_PODF_BUSY_SHIFT));
+    //while(CCM->CDHIPR & (1 << CCM_CDHIPR_AHB_PODF_BUSY_SHIFT));
+    while((((CCM->CDHIPR) >> CCM_CDHIPR_AHB_PODF_BUSY_SHIFT) & 0x1) == 1) ;
+#endif
 
     /*Setting ipg_clk_root = 66MHx (permitting ipg_clk_root 3MHz~66MHz)*/
     CCM->CBCDR &= ~CCM_CBCDR_IPG_PODF(3);

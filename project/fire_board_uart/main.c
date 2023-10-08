@@ -8,7 +8,7 @@ int main(void)
     int i = 1;
     uchar_t a = 0;
 
-
+    clock_init();
     clock_all_enable();
     led_init();
     uart1_USB_init();
@@ -16,7 +16,7 @@ int main(void)
     while(1)
     {
         puts("Please enter a character: ");
-        a = getc();
+        a = getca();
         putc(a);
         puts("\r\n");
 

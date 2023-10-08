@@ -54,7 +54,7 @@ void puts(char * str)
  * 
  * @return uchar_t 
  */
-uchar_t getc(void)
+uchar_t getca(void)
 {
     while((UART1_USBPort->USR2 & 0x1) == 0);            //waiting character receive.
     return UART1_USBPort->URXD;                         // return the character received.

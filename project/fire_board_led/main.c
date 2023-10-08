@@ -5,6 +5,9 @@
 
 int main(void)
 {
+    //clock init
+    clock_init();
+
     //enable the clocks 
     clock_all_enable();
 
