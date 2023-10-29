@@ -253,5 +253,33 @@ typedef struct
 } GIC_Type;
 
 
+#define     __GIC_PRIO_BITS   5          /**< Number of Bits used for Priority Levels */
+typedef     void (* system_irq_handler_t) (unsigned int giccIar, void *param);
+typedef struct _sys_irq_handle
+{
+      system_irq_handler_t    irqHandler;
+      void  *userParam;
+}sys_irq_handle_t;
+
+
+uint32_t __get_CBAR(void);
+void GIC_init(void);
+void GIC_EnableIRQ(IRQn_Type IRQn);
+void GIC_DisableIRQ(IRQn_Type IRQn);
+uint32_t GIC_AcknowledgeIRQ(void);
+void GIC_DeactivateIRQ(uint32_t value);
+uint32_t GIC_GetRunningPriority(void);
+void GIC_SetPriorityGrouping(uint32_t PriorityGroup);
+uint32_t GIC_GetPriorityGrouping(void);
+void GIC_SetPriority(IRQn_Type IRQn, uint32_t priority);
+uint32_t GIC_GetPriority(IRQn_Type IRQn);
+
+void __set_VBAR(uint32_t vbar);
+void int_init(void);
+void system_irqhandler(unsigned int giccIar);
+void system_irqtable_init(void);
+void default_irqhandler(unsigned int giccIar, void *userParam);
+void system_register_irqhandler(IRQn_Type irq, system_irq_handler_t handler, void *userParam);
+
 
 #endif

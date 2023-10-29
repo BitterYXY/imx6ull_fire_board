@@ -39,7 +39,9 @@ INCDIRS			:= 	include \
 					bsp/rgb_led \
 					bsp/key \
 					bsp/beep \
-					bsp/uart
+					bsp/uart \
+					bsp/gic \
+					bsp/gpio
 
 
 SRCDIRS			:=	project/$(TARGET) \
@@ -49,7 +51,9 @@ SRCDIRS			:=	project/$(TARGET) \
 					bsp/rgb_led \
 					bsp/key \
 					bsp/beep \
-					bsp/uart
+					bsp/uart \
+					bsp/gic \
+					bsp/gpio
 
 LDS				:= project/imx6ull.lds
 
