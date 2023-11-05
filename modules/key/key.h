@@ -3,7 +3,8 @@
 
 #include "common.h"
 
-#define     KEY_GPIO5_IO01      1
+#define     KEY_PIN             1
+
 #define     KEY_ON              1
 #define     KEY_OFF             0
 

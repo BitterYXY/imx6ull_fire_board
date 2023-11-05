@@ -1,34 +1,35 @@
-#include "imx6ull.h"
-#include "common.h"
-#include "delay.h"
+#include "gpio.h"
+#include "iomux.h"
 #include "key.h"
+#include "delay.h"
 
-struct GPIO_TYPE *KEY = (struct GPIO_TYPE *)GPIO5_BASE;
+static GPIO_Type *KEY = GPIO5;
+static gpio_pin_config_t key_cfg = {kGPIO_DigitalInput, 0, kGPIO_NoIntmode};
 
 void key_init()
 {
     /*key iomux mode*/
-    *IOMUXC_SNVS_SW_MUX_CTL_PAD_SNVS_TAMPER1 = IOMUXC_SNVS_SW_MUX_CTL_PAD_SNVS_TAMPER1_GPIO5_IO01;
+    IOMUXC_SetPinMux(IOMUXC_SNVS_SNVS_TAMPER1_GPIO5_IO01, 0);
 
     /*key iomux pad*/
-    *IOMUXC_SNVS_SW_PAD_CTL_PAD_SNVS_TAMPER1 = IOMUXC_SNVS_SW_PAD_CTL_PAD_SNVS_TAMPER1_GPIO5_IO01;
+    IOMUXC_SetPinConfig(IOMUXC_SNVS_SNVS_TAMPER1_GPIO5_IO01, 0x1f080);
 
     /*key gpio direction setting*/
-    KEY->GDIR   &= ~(1<<KEY_GPIO5_IO01);
+    GPIO_PinInit(KEY, KEY_PIN, &key_cfg);
 }
 
 uint32_t key_check()
 {
     int ret = 0;
 
-    if((KEY->PSR & (1<<KEY_GPIO5_IO01)) == (1<<KEY_GPIO5_IO01)){
+    if(GPIO_ReadPadStatus(KEY, KEY_PIN) == KEY_ON){
         delay(10);
-        if((KEY->PSR & (1<<KEY_GPIO5_IO01)) == (1<<KEY_GPIO5_IO01))
+        if(GPIO_ReadPadStatus(KEY, KEY_PIN) == KEY_ON)
         {
             ret = KEY_ON;
         }
     }
-    else if((KEY->PSR & (1<<KEY_GPIO5_IO01)) == 0)
+    else if(GPIO_ReadPadStatus(KEY, KEY_PIN) == KEY_OFF)
     {
         ret = KEY_OFF;
     }

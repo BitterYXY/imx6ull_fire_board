@@ -5,11 +5,11 @@
 */
 uint32_t __get_CBAR(void)
 {
-      uint32_t __dst;
-      __asm("mrc p15, 4, %0, c15, c0, 0"
+    uint32_t __dst;
+    __asm("mrc p15, 4, %0, c15, c0, 0"
             : "=r"(__dst)
-      );
-      return __dst;
+        );
+    return __dst;
 }
 
 void GIC_Init(void)
@@ -126,9 +126,9 @@ static sys_irq_handle_t irqTable[NUMBER_OF_INT_VECTORS];
 void __set_VBAR(uint32_t vbar)
 {
     __asm("mcr p15, 0, %0, c12, c0, 0"
-          :
-          : "r"(vbar)
-          );
+            :
+            : "r"(vbar)
+        );
 }
 
 /**

@@ -260,7 +260,7 @@ void GPIO_WritePinOutput(GPIO_Type* base, uint32_t pin, uint8_t output);
  * @param pin GPIO port pin number.
  * @retval GPIO port input value.
  */
-static inline uint32_t GPIO_ReadPinInput(GPIO_Type* base, uint32_t pin);
+uint32_t GPIO_ReadPinInput(GPIO_Type* base, uint32_t pin);
 
 /*!
  * @brief Reads the current GPIO pin pad status.
@@ -269,7 +269,7 @@ static inline uint32_t GPIO_ReadPinInput(GPIO_Type* base, uint32_t pin);
  * @param pin GPIO port pin number.
  * @retval GPIO pin pad status value.
  */
-static inline uint32_t GPIO_ReadPadStatus(GPIO_Type* base, uint32_t pin);
+uint32_t GPIO_ReadPadStatus(GPIO_Type* base, uint32_t pin);
 
 /*!
  * @brief Sets the output level of the multiple GPIO pins to the logic 1.

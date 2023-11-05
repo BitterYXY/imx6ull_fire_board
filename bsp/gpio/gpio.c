@@ -10,7 +10,7 @@ void GPIO_PinInit(GPIO_Type* base, uint32_t pin, const gpio_pin_config_t* Config
     {
         base->GDIR &= ~(1U << pin);
     }
-    else
+    else if(Config->direction == kGPIO_DigitalOutput)
     {
         GPIO_WritePinOutput(base, pin, Config->outputLogic);
         base->GDIR |= (1U << pin);
@@ -33,13 +33,13 @@ void GPIO_WritePinOutput(GPIO_Type* base, uint32_t pin, uint8_t output)
 }
 
 
-static inline uint32_t GPIO_ReadPinInput(GPIO_Type* base, uint32_t pin)
+uint32_t GPIO_ReadPinInput(GPIO_Type* base, uint32_t pin)
 {
     return (((base->DR) >> pin) & 0x1U);
 }
 
 
-static inline uint32_t GPIO_ReadPadStatus(GPIO_Type* base, uint32_t pin)
+uint32_t GPIO_ReadPadStatus(GPIO_Type* base, uint32_t pin)
 {
     return (((base->PSR) >> pin) & 0x1U);
 }

@@ -73,12 +73,13 @@
 
 
 /**********************************************************GPIO module*******************************************************/
+/*
 #define     GPIO1_BASE      (__IO uint32_t *)0x209c000
 #define     GPIO2_BASE      (__IO uint32_t *)0x20a0000
 #define     GPIO3_BASE      (__IO uint32_t *)0x20a4000
 #define     GPIO4_BASE      (__IO uint32_t *)0x20a8000
 #define     GPIO5_BASE      (__IO uint32_t *)0x20ac000
-
+*/
 struct GPIO_TYPE
 {
     __IO uint32_t   DR;         //data register 1: high level, 0: low level;

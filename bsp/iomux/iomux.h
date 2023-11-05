@@ -1690,7 +1690,7 @@ typedef struct {
  * @param inputRegister The select input register.
  * @param inputDaisy   The input daisy.
  * @param configRegister  The config register.
- * @param inputOnfield   Software input on field (SION Bit value).
+ * @param inputOnfield   Software input on field (SION Bit value, 0-disabled; 1-enabled).
  */
 void IOMUXC_SetPinMux(uint32_t muxRegister,
                                     uint32_t muxMode,
