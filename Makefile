@@ -42,6 +42,7 @@ INCDIRS			:= 	include \
 					bsp/iomux \
 					modules/rgb_led \
 					modules/key \
+					modules/key_interrupt \
 					modules/beep 
 
 
@@ -55,6 +56,7 @@ SRCDIRS			:=	project/$(TARGET) \
 					bsp/iomux \
 					modules/rgb_led \
 					modules/key \
+					modules/key_interrupt \
 					modules/beep 
 
 LDS				:= project/imx6ull.lds
