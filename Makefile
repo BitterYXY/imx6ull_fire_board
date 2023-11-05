@@ -36,26 +36,26 @@ endif
 INCDIRS			:= 	include \
 					lib \
 					bsp/clock \
-					bsp/rgb_led \
-					bsp/key \
-					bsp/beep \
 					bsp/uart \
 					bsp/gic \
 					bsp/gpio \
-					bsp/iomux
+					bsp/iomux \
+					modules/rgb_led \
+					modules/key \
+					modules/beep 
 
 
 SRCDIRS			:=	project/$(TARGET) \
 					lib \
 					bsp \
 					bsp/clock \
-					bsp/rgb_led \
-					bsp/key \
-					bsp/beep \
 					bsp/uart \
 					bsp/gic \
 					bsp/gpio \
-					bsp/iomux 
+					bsp/iomux \
+					modules/rgb_led \
+					modules/key \
+					modules/beep 
 
 LDS				:= project/imx6ull.lds
 
