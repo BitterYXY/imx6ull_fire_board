@@ -2,9 +2,12 @@
 #define __LED_H__
 
 /* RGB_LED module*/
-#define     R_LED_GPIO1_IO04    4
-#define     G_LED_GPIO4_IO20    20
-#define     B_LED_GPIO4_IO19    19
+#define     R_LED_PIN           4
+#define     G_LED_PIN           20
+#define     B_LED_PIN           19
+
+#define     LED_ON              0
+#define     LED_OFF             1
 
 
 void led_init();

@@ -2,11 +2,6 @@
 
 void GPIO_PinInit(GPIO_Type* base, uint32_t pin, const gpio_pin_config_t* Config)
 {
-    if(pin >= 32)
-    {
-        return ;                   /* Nothing.*/
-    }
-
     /* Register reset to default value */
     base->IMR &= ~(1U << pin);
 
@@ -27,11 +22,6 @@ void GPIO_PinInit(GPIO_Type* base, uint32_t pin, const gpio_pin_config_t* Config
 
 void GPIO_WritePinOutput(GPIO_Type* base, uint32_t pin, uint8_t output)
 {
-    if(pin >= 32)
-    {
-        return ;                   /* Nothing.*/
-    }
-
     if (output == 0U)
     {
         base->DR &= ~(1U << pin);  /* Set pin output to low level.*/
@@ -45,22 +35,12 @@ void GPIO_WritePinOutput(GPIO_Type* base, uint32_t pin, uint8_t output)
 
 static inline uint32_t GPIO_ReadPinInput(GPIO_Type* base, uint32_t pin)
 {
-    if(pin >= 32)
-    {
-        return ;                   /* Nothing.*/
-    }
-
     return (((base->DR) >> pin) & 0x1U);
 }
 
 
 static inline uint32_t GPIO_ReadPadStatus(GPIO_Type* base, uint32_t pin)
 {
-    if(pin >= 32)
-    {
-        return ;                   /* Nothing.*/
-    }
-
     return (((base->PSR) >> pin) & 0x1U);
 }
 

@@ -14,7 +14,6 @@ uint32_t __get_CBAR(void)
 
 void GIC_Init(void)
 {
-    uint32_t i;
     uint32_t irqRegs;
     GIC_Type *gic = (GIC_Type *)(__get_CBAR() & 0xFFFF0000UL);
 

@@ -1,73 +1,79 @@
-#include "imx6ull.h"
+#include "gpio.h"
+#include "iomux.h"
 #include "led.h"
 
-struct GPIO_TYPE* R_LED = (struct GPIO_TYPE *)GPIO1_BASE;
-struct GPIO_TYPE* G_LED = (struct GPIO_TYPE *)GPIO4_BASE;
-struct GPIO_TYPE* B_LED = (struct GPIO_TYPE *)GPIO4_BASE;
+static GPIO_Type * R_LED = GPIO1;
+static GPIO_Type * G_LED = GPIO4;
+static GPIO_Type * B_LED = GPIO4;
+
+static gpio_pin_config_t r_led_cfg = {kGPIO_DigitalOutput, 1, kGPIO_NoIntmode};
+static gpio_pin_config_t g_led_cfg = {kGPIO_DigitalOutput, 1, kGPIO_NoIntmode};
+static gpio_pin_config_t b_led_cfg = {kGPIO_DigitalOutput, 1, kGPIO_NoIntmode};
 
 void led_init()
 {
     /*led iomux mode*/
-    *IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO04   = IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO04_GPIO1_IO04;
-    *IOMUXC_SW_MUX_CTL_PAD_CSI_HSYNC    = IOMUXC_SW_MUX_CTL_PAD_CSI_HSYNC_GPIO4_IO20;
-    *IOMUXC_SW_MUX_CTL_PAD_CSI_VSYNC    = IOMUXC_SW_MUX_CTL_PAD_CSI_VSYNC_GPIO4_IO19;
+    IOMUXC_SetPinMux(IOMUXC_GPIO1_IO04_GPIO1_IO04, 0);  //R_LED
+    IOMUXC_SetPinMux(IOMUXC_CSI_HSYNC_GPIO4_IO20,  0);  //G_LED
+    IOMUXC_SetPinMux(IOMUXC_CSI_VSYNC_GPIO4_IO19,  0);  //B_LED
 
     /*led iomux pad*/
-    *IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO04   = IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO04_GPIO1_IO04;
-    *IOMUXC_SW_PAD_CTL_PAD_CSI_HSYNC    = IOMUXC_SW_PAD_CTL_PAD_CSI_HSYNC_GPIO4_IO20;
-    *IOMUXC_SW_PAD_CTL_PAD_CSI_VSYNC    = IOMUXC_SW_PAD_CTL_PAD_CSI_VSYNC_GPIO4_IO19;
+    IOMUXC_SetPinConfig(IOMUXC_GPIO1_IO04_GPIO1_IO04, 0x1f838);
+    IOMUXC_SetPinConfig(IOMUXC_CSI_HSYNC_GPIO4_IO20,  0x1f838);
+    IOMUXC_SetPinConfig(IOMUXC_CSI_VSYNC_GPIO4_IO19,  0x1f838);
 
     /*led gpio direction setting*/
-    R_LED->GDIR |=  (1<<R_LED_GPIO1_IO04);
-    G_LED->GDIR |=  (1<<G_LED_GPIO4_IO20);
-    B_LED->GDIR |=  (1<<B_LED_GPIO4_IO19);
+    GPIO_PinInit(R_LED, R_LED_PIN, &r_led_cfg);
+    GPIO_PinInit(G_LED, G_LED_PIN, &g_led_cfg);
+    GPIO_PinInit(B_LED, B_LED_PIN, &b_led_cfg);
+
 
     /*trun off leds*/
-    R_LED->DR |= (1<<R_LED_GPIO1_IO04);
-    G_LED->DR |= (1<<G_LED_GPIO4_IO20);
-    B_LED->DR |= (1<<B_LED_GPIO4_IO19);
+    GPIO_WritePinOutput(R_LED, R_LED_PIN, LED_OFF);
+    GPIO_WritePinOutput(G_LED, G_LED_PIN, LED_OFF);
+    GPIO_WritePinOutput(B_LED, B_LED_PIN, LED_OFF);
 }
 
 void led_red_on()
 {
-    R_LED->DR &= ~(1<<R_LED_GPIO1_IO04);
+    GPIO_WritePinOutput(R_LED, R_LED_PIN, LED_ON);
 }
 
 void led_red_off()
 {
-    R_LED->DR |= (1<<R_LED_GPIO1_IO04);
+    GPIO_WritePinOutput(R_LED, R_LED_PIN, LED_OFF);
 }
 
 void led_green_on()
 {
-    G_LED->DR &= ~(1<<G_LED_GPIO4_IO20);
+    GPIO_WritePinOutput(G_LED, G_LED_PIN, LED_ON);
 }
 
 void led_green_off()
 {
-    G_LED->DR |= (1<<G_LED_GPIO4_IO20);
+    GPIO_WritePinOutput(G_LED, G_LED_PIN, LED_OFF);
 }
 
 void led_blue_on()
 {
-    B_LED->DR &= ~(1<<B_LED_GPIO4_IO19);
+    GPIO_WritePinOutput(B_LED, B_LED_PIN, LED_ON);
 }
 
 void led_blue_off()
 {
-    B_LED->DR |= (1<<B_LED_GPIO4_IO19);
+    GPIO_WritePinOutput(B_LED, B_LED_PIN, LED_OFF);
 }
 
 void led_rgb_on()
 {
-    R_LED->DR &= ~(1<<R_LED_GPIO1_IO04);
-    G_LED->DR &= ~(1<<G_LED_GPIO4_IO20);
-    B_LED->DR &= ~(1<<B_LED_GPIO4_IO19);
+    GPIO_WritePinOutput(R_LED, R_LED_PIN, LED_ON);
+    GPIO_WritePinOutput(G_LED, G_LED_PIN, LED_ON);
+    GPIO_WritePinOutput(B_LED, B_LED_PIN, LED_ON);
 }
 
 void led_rgb_off()
 {
-    R_LED->DR |= (1<<R_LED_GPIO1_IO04);
-    G_LED->DR |= (1<<G_LED_GPIO4_IO20);
-    B_LED->DR |= (1<<B_LED_GPIO4_IO19);
+    GPIO_WritePinOutput(R_LED, R_LED_PIN, LED_OFF);
+    GPIO_WritePinOutput(G_LED, G_LED_PIN, LED_OFF);
+    GPIO_WritePinOutput(B_LED, B_LED_PIN, LED_OFF);
 }

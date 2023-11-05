@@ -1,6 +1,6 @@
 #include "iomux.h"
 
-static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
+void IOMUXC_SetPinMux(uint32_t muxRegister,
                                     uint32_t muxMode,
                                     uint32_t inputRegister,
                                     uint32_t inputDaisy,
@@ -16,7 +16,7 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
     }
 }
 
-static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
+void IOMUXC_SetPinConfig(uint32_t muxRegister,
                                     uint32_t muxMode,
                                     uint32_t inputRegister,
                                     uint32_t inputDaisy,
