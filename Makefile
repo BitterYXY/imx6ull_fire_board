@@ -40,6 +40,7 @@ INCDIRS			:= 	include \
 					bsp/gic \
 					bsp/gpio \
 					bsp/iomux \
+					bsp/pmu \
 					modules/rgb_led \
 					modules/key \
 					modules/key_interrupt \
@@ -54,6 +55,7 @@ SRCDIRS			:=	project/$(TARGET) \
 					bsp/gic \
 					bsp/gpio \
 					bsp/iomux \
+					bsp/pmu \
 					modules/rgb_led \
 					modules/key \
 					modules/key_interrupt \
