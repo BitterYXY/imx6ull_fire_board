@@ -26,5 +26,11 @@ typedef     unsigned long long      uint64_t;
 typedef     unsigned char           uchar_t;
 typedef     unsigned int            uint_t;
 
+typedef enum _bool
+{
+    false   = 0U,
+    true    = 1U,
+} bool;
+
 
 #endif

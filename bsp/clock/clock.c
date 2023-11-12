@@ -84,3 +84,191 @@ void clock_init(void)
     CCM->CSCMR1 &= ~CCM_CSCMR1_PERCLK_PODF(0x3f);
 
 }
+
+uint32_t CLOCK_GetFreq(clock_name_t name)
+{
+    uint32_t freq;
+
+    switch (name)
+    {
+        case kCLOCK_CpuClk:
+            switch (CCM->CCSR & (CCM_CCSR_STEP_SEL_MASK | CCM_CCSR_SECONDARY_CLK_SEL_MASK | CCM_CCSR_PLL1_SW_CLK_SEL_MASK))
+            {
+                /* ARM PLL ---> CPU Clock */
+                case 0U:
+                    freq = CLOCK_GetPllFreq(kCLOCK_PllArm);
+                    break;
+
+                /* Osc_clk (24M) ---> Step Clock ---> CPU Clock */
+                case (CCM_CCSR_PLL1_SW_CLK_SEL_MASK):
+                    freq = CLOCK_GetOscFreq();
+                    break;
+
+                /* PLL2 PFD2 ---> Secondary_clk ---> Step Clock ---> CPU Clock */
+                case (CCM_CCSR_PLL1_SW_CLK_SEL_MASK | CCM_CCSR_STEP_SEL_MASK):
+                    freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+                    break;
+
+                /* PLL2 ---> Secondary_clk ---> Step Clock ---> CPU Clock */
+                case (CCM_CCSR_STEP_SEL_MASK | CCM_CCSR_SECONDARY_CLK_SEL_MASK | CCM_CCSR_PLL1_SW_CLK_SEL_MASK):
+                    freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+                    break;
+
+                default:
+                    freq = 0U;
+                    break;
+            }
+            freq /= (((CCM->CACRR & CCM_CACRR_ARM_PODF_MASK) >> CCM_CACRR_ARM_PODF_SHIFT) + 1U);
+            break;
+
+        case kCLOCK_AxiClk:
+            /* AXI alternative clock ---> AXI Clock */
+            if (CCM->CBCDR & CCM_CBCDR_AXI_SEL_MASK)
+            {
+                /* PLL3 PFD1 ---> AXI alternative clock ---> AXI Clock */
+                if (CCM->CBCDR & CCM_CBCDR_AXI_ALT_SEL_MASK)
+                {
+                    freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd1);
+                }
+                /* PLL2 PFD2 ---> AXI alternative clock ---> AXI Clock */
+                else
+                {
+                    freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+                }
+            }
+            /* Periph_clk ---> AXI Clock */
+            else
+            {
+                freq = CLOCK_GetPeriphClkFreq();
+            }
+
+            freq /= (((CCM->CBCDR & CCM_CBCDR_AXI_PODF_MASK) >> CCM_CBCDR_AXI_PODF_SHIFT) + 1U);
+            break;
+
+        case kCLOCK_AhbClk:
+            /* Periph_clk ---> AHB Clock */
+            freq = CLOCK_GetPeriphClkFreq() / (((CCM->CBCDR & CCM_CBCDR_AHB_PODF_MASK) >> CCM_CBCDR_AHB_PODF_SHIFT) + 1U);
+            break;
+
+        case kCLOCK_IpgClk:
+            /* Periph_clk ---> AHB Clock ---> IPG Clock */
+            freq = CLOCK_GetPeriphClkFreq() / (((CCM->CBCDR & CCM_CBCDR_AHB_PODF_MASK) >> CCM_CBCDR_AHB_PODF_SHIFT) + 1U);
+            freq /= (((CCM->CBCDR & CCM_CBCDR_IPG_PODF_MASK) >> CCM_CBCDR_IPG_PODF_SHIFT) + 1U);
+            break;
+
+        case kCLOCK_MmdcClk:
+            /* periph2_clk2 ---> MMDC Clock */
+            if (CCM->CBCDR & CCM_CBCDR_PERIPH2_CLK_SEL_MASK)
+            {
+                /* OSC ---> periph2_clk2 ---> MMDC Clock */
+                if (CCM->CBCMR & CCM_CBCMR_PERIPH2_CLK2_SEL_MASK)
+                {
+                    freq = CLOCK_GetOscFreq();
+                }
+                /* pll3_sw_clk ---> periph2_clk2 ---> MMDC Clock */
+                else
+                {
+                    freq = CLOCK_GetPllFreq(kCLOCK_PllUsb1);
+                }
+
+                freq /= (((CCM->CBCDR & CCM_CBCDR_PERIPH2_CLK2_PODF_MASK) >> CCM_CBCDR_PERIPH2_CLK2_PODF_SHIFT) + 1U);
+            }
+            /* pll2_main_clk ---> MMDC Clock */
+            else
+            {
+                switch (CCM->CBCMR & CCM_CBCMR_PRE_PERIPH2_CLK_SEL_MASK)
+                {
+                    /* PLL2 ---> pll2_main_clk ---> MMDC Clock */
+                    case CCM_CBCMR_PRE_PERIPH2_CLK_SEL(0U):
+                        freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+                        break;
+
+                    /* PLL2 PFD2 ---> pll2_main_clk ---> MMDC Clock */
+                    case CCM_CBCMR_PRE_PERIPH2_CLK_SEL(1U):
+                        freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+                        break;
+
+                    /* PLL2 PFD0 ---> pll2_main_clk ---> MMDC Clock */
+                    case CCM_CBCMR_PRE_PERIPH2_CLK_SEL(2U):
+                        freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd0);
+                        break;
+
+                    /* PLL4 ---> pll2_main_clk ---> MMDC Clock */
+                    case CCM_CBCMR_PRE_PERIPH2_CLK_SEL(3U):
+                        freq = CLOCK_GetPllFreq(kCLOCK_PllAudio);
+                        break;
+
+                    default:
+                        freq = 0U;
+                        break;
+                }
+            }
+
+            freq /= (((CCM->CBCDR & CCM_CBCDR_FABRIC_MMDC_PODF_MASK) >> CCM_CBCDR_FABRIC_MMDC_PODF_SHIFT) + 1U);
+            break;
+
+        case kCLOCK_OscClk:
+            freq = CLOCK_GetOscFreq();
+            break;
+        case kCLOCK_RtcClk:
+            freq = CLOCK_GetRtcFreq();
+            break;
+        case kCLOCK_ArmPllClk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllArm);
+            break;
+        case kCLOCK_Usb1PllClk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllUsb1);
+            break;
+        case kCLOCK_Usb1PllPfd0Clk:
+            freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd0);
+            break;
+        case kCLOCK_Usb1PllPfd1Clk:
+            freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd1);
+            break;
+        case kCLOCK_Usb1PllPfd2Clk:
+            freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd2);
+            break;
+        case kCLOCK_Usb1PllPfd3Clk:
+            freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd3);
+            break;
+        case kCLOCK_Usb2PllClk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllUsb2);
+            break;
+        case kCLOCK_SysPllClk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+            break;
+        case kCLOCK_SysPllPfd0Clk:
+            freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd0);
+            break;
+        case kCLOCK_SysPllPfd1Clk:
+            freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd1);
+            break;
+        case kCLOCK_SysPllPfd2Clk:
+            freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+            break;
+        case kCLOCK_SysPllPfd3Clk:
+            freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd3);
+            break;
+        case kCLOCK_EnetPll0Clk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllEnet0);
+            break;
+        case kCLOCK_EnetPll1Clk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllEnet1);
+            break;
+        case kCLOCK_EnetPll2Clk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllEnet2);
+            break;
+        case kCLOCK_AudioPllClk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllAudio);
+            break;
+        case kCLOCK_VideoPllClk:
+            freq = CLOCK_GetPllFreq(kCLOCK_PllVideo);
+            break;
+        default:
+            freq = 0U;
+            break;
+    }
+
+    return freq;
+}
+
