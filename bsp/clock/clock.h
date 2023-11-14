@@ -3,6 +3,8 @@
 
 #include "common.h"
 #include "gic.h"
+#include "pmu.h"
+#include "usb.h"
 /* ----------------------------------------------------------------------------
    -- CCM Peripheral Access Layer
    ---------------------------------------------------------------------------- */
@@ -3352,7 +3354,7 @@ uint32_t CLOCK_GetFreq(clock_name_t name);
  * 1. Use external crystal oscillator.
  * 2. Bypass the external crystal oscillator, using input source clock directly.
  *
- * After this function, please call @ref CLOCK_SetXtal0Freq to inform clock driver
+ * After this function, please call CLOCK_SetXtal0Freq to inform clock driver
  * the external clock frequency.
  *
  * @param bypassXtalOsc Pass in true to bypass the external crystal oscillator.
@@ -3361,8 +3363,312 @@ uint32_t CLOCK_GetFreq(clock_name_t name);
  */
 void CLOCK_InitExternalClk(bool bypassXtalOsc);
 
+/*!
+ * @brief Deinitialize the external 24MHz clock.
+ *
+ * This function disables the external 24MHz clock.
+ *
+ * After this function, please call @ref CLOCK_SetXtal0Freq to set external clock
+ * frequency to 0.
+ */
+void CLOCK_DeinitExternalClk(void);
+
+/*!
+ * @brief Switch the OSC.
+ *
+ * This function switches the OSC source for SoC.
+ *
+ * @param osc   OSC source to switch to.
+ */
+void CLOCK_SwitchOsc(clock_osc_t osc);
+
+/*!
+ * @brief Gets the OSC clock frequency.
+ *
+ * This function will return the external XTAL OSC frequency if it is selected as the source of OSC,
+ * otherwise internal 24MHz RC OSC frequency will be returned.
+ *
+ * @param osc   OSC type to get frequency.
+ *
+ * @return  Clock frequency; If the clock is invalid, returns 0.
+ */
+static inline uint32_t CLOCK_GetOscFreq(void)
+{
+    return (PMU->LOWPWR_CTRL & PMU_LOWPWR_CTRL_OSC_SEL_MASK) ? 24000000UL : g_xtalFreq;
+}
+
+/*!
+ * @brief Gets the RTC clock frequency.
+ *
+ * @return  Clock frequency; If the clock is invalid, returns 0.
+ */
+static inline uint32_t CLOCK_GetRtcFreq(void)
+{
+    return 32768U;
+}
+
+/*!
+ * @brief Set the XTAL (24M OSC) frequency based on board setting.
+ *
+ * @param freq The XTAL input clock frequency in Hz.
+ */
+static inline void CLOCK_SetXtalFreq(uint32_t freq)
+{
+    g_xtalFreq = freq;
+}
+
+/*!
+ * @brief Set the RTC XTAL (32K OSC) frequency based on board setting.
+ *
+ * @param freq The RTC XTAL input clock frequency in Hz.
+ */
+static inline void CLOCK_SetRtcXtalFreq(uint32_t freq)
+{
+    g_rtcXtalFreq = freq;
+}
+
+/*!
+ * @brief Initialize the RC oscillator 24MHz clock.
+ */
+void CLOCK_InitRcOsc24M(void);
+
+/*!
+ * @brief Power down the RCOSC 24M clock.
+ */
+void CLOCK_DeinitRcOsc24M(void);
 
 
+/*!
+ * @brief Initialize the ARM PLL.
+ *
+ * This function initialize the ARM PLL with specific settings
+ *
+ * @param config   configuration to set to PLL.
+ */
+void CLOCK_InitArmPll(const clock_arm_pll_config_t *config);
+
+/*!
+ * @brief De-initialize the ARM PLL.
+ */
+void CLOCK_DeinitArmPll(void);
+
+/*!
+ * @brief Initialize the System PLL.
+ *
+ * This function initializes the System PLL with specific settings
+ *
+ * @param config Configuration to set to PLL.
+ */
+void CLOCK_InitSysPll(const clock_sys_pll_config_t *config);
+
+/*!
+ * @brief De-initialize the System PLL.
+ */
+void CLOCK_DeinitSysPll(void);
+
+/*!
+ * @brief Initialize the USB1 PLL.
+ *
+ * This function initializes the USB1 PLL with specific settings
+ *
+ * @param config Configuration to set to PLL.
+ */
+void CLOCK_InitUsb1Pll(const clock_usb_pll_config_t *config);
+
+/*!
+ * @brief Deinitialize the USB1 PLL.
+ */
+void CLOCK_DeinitUsb1Pll(void);
+
+/*!
+ * @brief Initialize the USB2 PLL.
+ *
+ * This function initializes the USB2 PLL with specific settings
+ *
+ * @param config Configuration to set to PLL.
+ */
+void CLOCK_InitUsb2Pll(const clock_usb_pll_config_t *config);
+
+/*!
+ * @brief Deinitialize the USB2 PLL.
+ */
+void CLOCK_DeinitUsb2Pll(void);
+
+/*!
+ * @brief Initializes the Audio PLL.
+ *
+ * This function initializes the Audio PLL with specific settings
+ *
+ * @param config Configuration to set to PLL.
+ */
+void CLOCK_InitAudioPll(const clock_audio_pll_config_t *config);
+
+/*!
+ * @brief De-initialize the Audio PLL.
+ */
+void CLOCK_DeinitAudioPll(void);
+
+/*!
+ * @brief Initialize the video PLL.
+ *
+ * This function configures the Video PLL with specific settings
+ *
+ * @param config   configuration to set to PLL.
+ */
+void CLOCK_InitVideoPll(const clock_video_pll_config_t *config);
+
+/*!
+ * @brief De-initialize the Video PLL.
+ */
+void CLOCK_DeinitVideoPll(void);
+
+/*!
+ * @brief Initialize the ENET PLL.
+ *
+ * This function initializes the ENET PLL with specific settings.
+ *
+ * @param config Configuration to set to PLL.
+ */
+void CLOCK_InitEnetPll(const clock_enet_pll_config_t *config);
+
+/*!
+ * @brief Deinitialize the ENET PLL.
+ *
+ * This function disables the ENET PLL.
+ */
+void CLOCK_DeinitEnetPll(void);
+
+/*!
+ * @brief Get current PLL output frequency.
+ *
+ * This function get current output frequency of specific PLL
+ *
+ * @param pll   pll name to get frequency.
+ * @return The PLL output frequency in hertz.
+ */
+uint32_t CLOCK_GetPllFreq(clock_pll_t pll);
+
+/*!
+ * @brief Initialize the System PLL PFD.
+ *
+ * This function initializes the System PLL PFD. During new value setting,
+ * the clock output is disabled to prevent glitch.
+ *
+ * @param pfd Which PFD clock to enable.
+ * @param pfdFrac The PFD FRAC value.
+ * @note It is recommended that PFD settings are kept between 12-35.
+ */
+void CLOCK_InitSysPfd(clock_pfd_t pfd, uint8_t pfdFrac);
+
+/*!
+ * @brief De-initialize the System PLL PFD.
+ *
+ * This function disables the System PLL PFD.
+ *
+ * @param pfd Which PFD clock to disable.
+ */
+void CLOCK_DeinitSysPfd(clock_pfd_t pfd);
+
+/*!
+ * @brief Initialize the USB1 PLL PFD.
+ *
+ * This function initializes the USB1 PLL PFD. During new value setting,
+ * the clock output is disabled to prevent glitch.
+ *
+ * @param pfd Which PFD clock to enable.
+ * @param pfdFrac The PFD FRAC value.
+ * @note It is recommended that PFD settings are kept between 12-35.
+ */
+void CLOCK_InitUsb1Pfd(clock_pfd_t pfd, uint8_t pfdFrac);
+
+/*!
+ * @brief De-initialize the USB1 PLL PFD.
+ *
+ * This function disables the USB1 PLL PFD.
+ *
+ * @param pfd Which PFD clock to disable.
+ */
+void CLOCK_DeinitUsb1Pfd(clock_pfd_t pfd);
+
+/*!
+ * @brief Get current System PLL PFD output frequency.
+ *
+ * This function get current output frequency of specific System PLL PFD
+ *
+ * @param pfd   pfd name to get frequency.
+ * @return The PFD output frequency in hertz.
+ */
+uint32_t CLOCK_GetSysPfdFreq(clock_pfd_t pfd);
+
+/*!
+ * @brief Get current USB1 PLL PFD output frequency.
+ *
+ * This function get current output frequency of specific USB1 PLL PFD
+ *
+ * @param pfd   pfd name to get frequency.
+ * @return The PFD output frequency in hertz.
+ */
+uint32_t CLOCK_GetUsb1PfdFreq(clock_pfd_t pfd);
+
+/*! @brief Enable USB HS clock.
+ *
+ * This function only enables the access to USB HS prepheral, upper layer
+ * should first call the @ref CLOCK_EnableUsbhs0PhyPllClock to enable the PHY
+ * clock to use USB HS.
+ *
+ * @param src  USB HS does not care about the clock source, here must be @ref kCLOCK_UsbSrcUnused.
+ * @param freq USB HS does not care about the clock source, so this parameter is ignored.
+ * @retval true The clock is set successfully.
+ * @retval false The clock source is invalid to get proper USB HS clock.
+ */
+bool CLOCK_EnableUsbhs0Clock(clock_usb_src_t src, uint32_t freq);
+
+/*! @brief Enable USB HS PHY PLL clock.
+ *
+ * This function enables the internal 480MHz USB PHY PLL clock.
+ *
+ * @param src  USB HS PHY PLL clock source.
+ * @param freq The frequency specified by src.
+ * @retval true The clock is set successfully.
+ * @retval false The clock source is invalid to get proper USB HS clock.
+ */
+bool CLOCK_EnableUsbhs0PhyPllClock(clock_usb_phy_src_t src, uint32_t freq);
+
+/*! @brief Disable USB HS PHY PLL clock.
+ *
+ * This function disables USB HS PHY PLL clock.
+ */
+void CLOCK_DisableUsbhs0PhyPllClock(void);
+
+/*! @brief Enable USB HS clock.
+ *
+ * This function only enables the access to USB HS prepheral, upper layer
+ * should first call the @ref CLOCK_EnableUsbhs0PhyPllClock to enable the PHY
+ * clock to use USB HS.
+ *
+ * @param src  USB HS does not care about the clock source, here must be @ref kCLOCK_UsbSrcUnused.
+ * @param freq USB HS does not care about the clock source, so this parameter is ignored.
+ * @retval true The clock is set successfully.
+ * @retval false The clock source is invalid to get proper USB HS clock.
+ */
+bool CLOCK_EnableUsbhs1Clock(clock_usb_src_t src, uint32_t freq);
+
+/*! @brief Enable USB HS PHY PLL clock.
+ *
+ * This function enables the internal 480MHz USB PHY PLL clock.
+ *
+ * @param src  USB HS PHY PLL clock source.
+ * @param freq The frequency specified by src.
+ * @retval true The clock is set successfully.
+ * @retval false The clock source is invalid to get proper USB HS clock.
+ */
+bool CLOCK_EnableUsbhs1PhyPllClock(clock_usb_phy_src_t src, uint32_t freq);
+
+/*! @brief Disable USB HS PHY PLL clock.
+ *
+ * This function disables USB HS PHY PLL clock.
+ */
+void CLOCK_DisableUsbhs1PhyPllClock(void);
 
 
 
