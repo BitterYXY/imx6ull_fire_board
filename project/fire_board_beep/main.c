@@ -1,4 +1,4 @@
-#include "clock.h"
+#include "clock_tree.h"
 #include "key.h"
 #include "led.h"
 #include "beep.h"
@@ -9,7 +9,7 @@ int main(void)
 {
     int i = 1;
     //enable the clocks
-    clock_all_enable();
+    clock_tree_enable();
 
     //initialize key module
     key_init();

@@ -1,4 +1,4 @@
-#include "clock.h"
+#include "clock_tree.h"
 #include "led.h"
 #include "uart.h"
 #include "common.h"
@@ -8,8 +8,8 @@ int main(void)
     int i = 1;
     uchar_t a = 0;
 
-    clock_init();
-    clock_all_enable();
+    clock_tree_init();
+    clock_tree_enable();
     led_init();
     uart1_USB_init();
 

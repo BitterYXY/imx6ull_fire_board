@@ -1,4 +1,4 @@
-#include "clock.h"
+#include "clock_tree.h"
 #include "led.h"
 #include "delay.h"
 #include "common.h"
@@ -6,10 +6,10 @@
 int main(void)
 {
     //clock init
-    clock_init();
+    clock_tree_init();
 
     //enable the clocks 
-    clock_all_enable();
+    clock_tree_enable();
 
     //initialize the GPIO pins on rgb led modules
     led_init();

@@ -1,4 +1,4 @@
-#include "clock.h"
+#include "clock_tree.h"
 #include "gic.h"
 #include "key_interrupt.h"
 #include "led.h"
@@ -10,7 +10,7 @@ int main(void)
 {
     int i = 1;
     //enable the clocks
-    clock_all_enable();
+    clock_tree_enable();
 
     //initialize gic interrupt
     int_init();

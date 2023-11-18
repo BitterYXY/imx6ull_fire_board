@@ -3555,7 +3555,7 @@ uint32_t CLOCK_GetPllFreq(clock_pll_t pll);
  * the clock output is disabled to prevent glitch.
  *
  * @param pfd Which PFD clock to enable.
- * @param pfdFrac The PFD FRAC value.
+ * @param pfdFrac The PFD FRAC value. the pfd clock = 528*18/pfdFrac
  * @note It is recommended that PFD settings are kept between 12-35.
  */
 void CLOCK_InitSysPfd(clock_pfd_t pfd, uint8_t pfdFrac);
@@ -3576,7 +3576,7 @@ void CLOCK_DeinitSysPfd(clock_pfd_t pfd);
  * the clock output is disabled to prevent glitch.
  *
  * @param pfd Which PFD clock to enable.
- * @param pfdFrac The PFD FRAC value.
+ * @param pfdFrac The PFD FRAC value. the pfd clock = 18*480/frac
  * @note It is recommended that PFD settings are kept between 12-35.
  */
 void CLOCK_InitUsb1Pfd(clock_pfd_t pfd, uint8_t pfdFrac);
@@ -3670,9 +3670,5 @@ bool CLOCK_EnableUsbhs1PhyPllClock(clock_usb_phy_src_t src, uint32_t freq);
  */
 void CLOCK_DisableUsbhs1PhyPllClock(void);
 
-
-
-void clock_all_enable(void);
-void clock_init(void);
 
 #endif

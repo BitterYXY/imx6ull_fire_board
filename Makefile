@@ -32,6 +32,8 @@ else
 	TARGET := fire_board_led
 endif
 
+# ld third-party libraries, such as math library.
+LIBPATH	:= -lgcc -L /usr/lib/gcc/arm-none-eabi/7.3.1/
 
 INCDIRS			:= 	include \
 					lib \
@@ -46,7 +48,8 @@ INCDIRS			:= 	include \
 					modules/rgb_led \
 					modules/key \
 					modules/key_interrupt \
-					modules/beep 
+					modules/beep \
+					modules/clock_tree
 
 
 SRCDIRS			:=	project/$(TARGET) \
@@ -63,7 +66,8 @@ SRCDIRS			:=	project/$(TARGET) \
 					modules/rgb_led \
 					modules/key \
 					modules/key_interrupt \
-					modules/beep 
+					modules/beep \
+					modules/clock_tree
 
 LDS				:= project/imx6ull.lds
 
@@ -88,7 +92,7 @@ $(TARGET): $(OBJDIR) $(TARGET).bin tools imxfile
 
 
 $(TARGET).bin : $(OBJS)
-	$(Q)$(LD)	-T$(LDS) -o $(TARGET).elf $^
+	$(Q)$(LD)	-T$(LDS) -o $(TARGET).elf $^ $(LIBPATH)
 	$(Q)$(OBJCOPY)	-O binary -S -g $(TARGET).elf $@
 
 $(SOBJS) : $(OBJDIR)/%.o : %.S
