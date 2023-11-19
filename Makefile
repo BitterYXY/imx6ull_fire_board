@@ -37,6 +37,7 @@ LIBPATH	:= -lgcc -L /usr/lib/gcc/arm-none-eabi/7.3.1/
 
 INCDIRS			:= 	include \
 					lib \
+					bsp \
 					bsp/clock \
 					bsp/uart \
 					bsp/gic \
