@@ -736,7 +736,7 @@ void UART_GetDefaultConfig(uart_config_t *config);
  * This function configures the UART module baud rate. This function is used to update
  * the UART module baud rate after the UART module is initialized by the UART_Init.
  * @code
- *  UART_SetBaudRate(UART1, 115200U, 20000000U);
+ *  UART_SetBaudRate(UART1, 115200U, 24000000U);
  * @endcode
  *
  * @param base UART peripheral base address.
@@ -942,6 +942,34 @@ void UART_WriteBlocking(UART_Type *base, const uint8_t *data, size_t length);
  * @retval kStatus_Success Successfully received all data.
  */
 status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length);
+
+/*!
+ * @brief Read RX register using non-blocking method.
+ *
+ * This function reads data from the RX register directly, upper layer must make
+ * sure the RX register is full or RX FIFO has data before calling this function.
+ *
+ * @param base UART peripheral base address.
+ * @param data Start addresss of the buffer to store the received data.
+ * @param length Size of the buffer.
+ */
+static void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length);
+
+/*!
+ * @brief Write to TX register using non-blocking method.
+ *
+ * This function writes data to the TX register directly, upper layer must make
+ * sure the TX register is empty or TX FIFO has empty room before calling this function.
+ *
+ * @note This function does not check whether all the data has been sent out to bus,
+ * so before disable TX, check kUART_TransmissionCompleteFlag to ensure the TX is
+ * finished.
+ *
+ * @param base UART peripheral base address.
+ * @param data Start addresss of the data to write.
+ * @param length Size of the buffer to be sent.
+ */
+static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length);
 
 /*!
  * @brief Initializes the UART handle.
