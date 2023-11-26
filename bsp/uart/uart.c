@@ -560,7 +560,7 @@ status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length)
     return kStatus_Success;
 }
 
-static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length)
+void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length)
 {
     //assert(data);
 
@@ -576,7 +576,7 @@ static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t l
     }
 }
 
-static void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length)
+void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length)
 {
     //assert(data);
 

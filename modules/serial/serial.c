@@ -82,7 +82,7 @@ void puts(char *str)
 
 unsigned char getc()
 {
-    char ch;
+    unsigned char ch;
     
     switch (UART_ReadBlocking(SERIAL_UART, &ch, 1))
     {
@@ -99,4 +99,6 @@ unsigned char getc()
         return ch;
         break;
     }
+
+    return 0;
 }

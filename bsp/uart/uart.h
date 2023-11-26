@@ -953,7 +953,7 @@ status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length);
  * @param data Start addresss of the buffer to store the received data.
  * @param length Size of the buffer.
  */
-static void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length);
+void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length);
 
 /*!
  * @brief Write to TX register using non-blocking method.
@@ -969,7 +969,7 @@ static void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length);
  * @param data Start addresss of the data to write.
  * @param length Size of the buffer to be sent.
  */
-static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length);
+void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length);
 
 /*!
  * @brief Initializes the UART handle.
@@ -1188,7 +1188,7 @@ static inline void UART_EnableRxDMA(UART_Type *base, bool enable)
 }
 
 
-void UART_EnableDMA(UART_Type *base, uint32_t dmaSource, bool enable)
+static inline void UART_EnableDMA(UART_Type *base, uint32_t dmaSource, bool enable)
 {
     volatile uint32_t *uart_reg = 0;
     uint32_t uart_mask = 0;
