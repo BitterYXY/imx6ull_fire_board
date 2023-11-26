@@ -1,6 +1,6 @@
 #include "clock_tree.h"
 #include "led.h"
-#include "uart.h"
+#include "serial.h"
 #include "common.h"
 
 int main(void)
@@ -11,12 +11,12 @@ int main(void)
     clock_tree_init();
     clock_tree_enable();
     led_init();
-    uart1_USB_init();
+    serial_init();
 
     while(1)
     {
         puts("Please enter a character: ");
-        a = getca();
+        a = getc();
         putc(a);
         puts("\r\n");
 

@@ -50,7 +50,8 @@ INCDIRS			:= 	include \
 					modules/key \
 					modules/key_interrupt \
 					modules/beep \
-					modules/clock_tree
+					modules/clock_tree \
+					modules/serial
 
 
 SRCDIRS			:=	project/$(TARGET) \
@@ -68,7 +69,8 @@ SRCDIRS			:=	project/$(TARGET) \
 					modules/key \
 					modules/key_interrupt \
 					modules/beep \
-					modules/clock_tree
+					modules/clock_tree \
+					modules/serial
 
 LDS				:= project/imx6ull.lds
 
