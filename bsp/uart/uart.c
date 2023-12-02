@@ -215,6 +215,10 @@ status_t UART_Init(UART_Type *base, const uart_config_t *config, uint32_t srcClo
         UART_EnableAutoBaudRate(base, false);
     }
 
+    base->UFCR = 5 << 7;
+    base->UBIR = 71;
+    base->UBMR = 3124;
+
     /* Enable UART module */
     UART_Enable(base);
 
