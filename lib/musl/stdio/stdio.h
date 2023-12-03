@@ -1,38 +1,39 @@
-#ifndef _STDIO_H
-#define _STDIO_H
+#ifndef		__STDIO_H__
+#define		__STDIO_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "common.h"
+#include "stdio_impl.h"
 
-#include <features.h>
+typedef struct _IO_FILE {
+	unsigned flags;
+	unsigned char *rpos, *rend;
+	int (*close)(FILE *);
+	unsigned char *wend, *wpos;
+	unsigned char *mustbezero_1;
+	unsigned char *wbase;
+	size_t (*read)(FILE *, unsigned char *, size_t);
+	size_t (*write)(FILE *, const unsigned char *, size_t);
+	off_t (*seek)(FILE *, off_t, int);
+	unsigned char *buf;
+	size_t buf_size;
+	FILE *prev, *next;
+	int fd;
+	int pipe_pid;
+	long lockcount;
+	int mode;
+	volatile int lock;
+	int lbf;
+	void *cookie;
+	off_t off;
+	char *getln_buf;
+	void *mustbezero_2;
+	unsigned char *shend;
+	off_t shlim, shcnt;
+	FILE *prev_locked, *next_locked;
+	struct __locale_struct *locale;
+} FILE;
 
-#define __NEED_FILE
-#define __NEED___isoc_va_list
-#define __NEED_size_t
-
-#if __STDC_VERSION__ < 201112L
-#define __NEED_struct__IO_FILE
-#endif
-
-#if defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE) \
- || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE) \
- || defined(_BSD_SOURCE)
-#define __NEED_ssize_t
-#define __NEED_off_t
-#define __NEED_va_list
-#endif
-
-#include <bits/alltypes.h>
-
-#if __cplusplus >= 201103L
-#define NULL nullptr
-#elif defined(__cplusplus)
-#define NULL 0L
-#else
-#define NULL ((void*)0)
-#endif
-
+//#undef is used to undefine the previously macro identifier
 #undef EOF
 #define EOF (-1)
 
@@ -217,8 +218,5 @@ FILE *fopencookie(void *, const char *, cookie_io_functions_t);
 #define off64_t off_t
 #endif
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

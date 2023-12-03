@@ -1,11 +1,7 @@
-#ifndef _STDIO_EXT_H
-#define _STDIO_EXT_H
+#ifndef     __STDIO_EXT_H__
+#define     __STDIO_EXT_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdio.h>
+#include "stdio.h"
 
 #define FSETLOCKING_QUERY 0
 #define FSETLOCKING_INTERNAL 1
@@ -27,8 +23,5 @@ const char *__freadptr(FILE *, size_t *);
 void __freadptrinc(FILE *, size_t);
 void __fseterr(FILE *);
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif

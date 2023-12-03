@@ -3,7 +3,7 @@
 #undef stdin
 
 static unsigned char buf[BUFSIZ+UNGET];
-hidden FILE __stdin_FILE = {
+FILE __stdin_FILE = {
 	.buf = buf+UNGET,
 	.buf_size = sizeof buf-UNGET,
 	.fd = 0,

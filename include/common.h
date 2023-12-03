@@ -13,7 +13,10 @@
 
 #define     TRUE    1
 #define     FALSE   0
+
+#ifndef NULL
 #define     NULL    ((void *)0)
+#endif
 
 typedef     signed char             int8_t;
 typedef     unsigned char           uint8_t;

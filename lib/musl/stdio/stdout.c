@@ -3,7 +3,7 @@
 #undef stdout
 
 static unsigned char buf[BUFSIZ+UNGET];
-hidden FILE __stdout_FILE = {
+FILE __stdout_FILE = {
 	.buf = buf+UNGET,
 	.buf_size = sizeof buf-UNGET,
 	.fd = 1,

@@ -3,7 +3,7 @@
 #undef stderr
 
 static unsigned char buf[UNGET];
-hidden FILE __stderr_FILE = {
+FILE __stderr_FILE = {
 	.buf = buf+UNGET,
 	.buf_size = 0,
 	.fd = 2,
