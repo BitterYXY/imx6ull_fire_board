@@ -138,13 +138,51 @@ char *strchr (const char *str, int c);
 char *strrchr (const char *str, int c);
 
 /**
+ * @brief Find out how mang consecutive characters at the beginning of string str1 
+ *        that do not contain characters in string str2
+ * @param str1  the string to be searched
+ * @param str2  the string that contain the characters that want to look for
  * 
+ * @return      return the number of consecutive characters at the beginning of string str1 
+ *              that do not contain characters in string str2.
 */
-size_t strcspn (const char *, const char *);
-size_t strspn (const char *, const char *);
-char *strpbrk (const char *, const char *);
-char *strstr (const char *, const char *);
-char *strtok (char *restrict, const char *restrict);
+size_t strcspn (const char *str1, const char *str2);
+
+/**
+ * @brief Find out the index of first characters in string str1 that not contained in string str2.
+ * @param str1 the first string
+ * @param str2 the another string
+ * 
+ * @return      the index
+*/
+size_t strspn (const char *str1, const char *str2);
+
+/**
+ * @brief Find out the first characters in string str1 that contained in string str2.
+ * @param str1  the first string
+ * @param str2  the another string
+ * 
+ * @return      NULL - not found the character
+ *              the pointer - that the first characters in string str1 that contained in string str2.
+*/
+char *strpbrk (const char *str1, const char *str2);
+
+/**
+ * @brief Find the loaction that the string needle firstly appear in the string haystack.
+ * @param haystack  the string to be searched
+ * @param needle    the little string to look for
+ * 
+ * @return      NULL - not find string needle in string haystack
+ *              the pointer - that the string needle firstly appear in the string haystack.
+*/
+char *strstr (const char *haystack, const char *needle);
+
+/**
+ * @brief Decompose the string str into a set of strings and delim into delimiters.
+ * @param str   the string to be decomposed
+ * @param delim the delimiters
+*/
+char *strtok (char *restrict str, const char *restrict delim);
 
 /**
  * @brief Evaluates the length of string, but not include '\0'.
@@ -155,7 +193,7 @@ char *strtok (char *restrict, const char *restrict);
 size_t strlen (const char *str);
 
 
-char *strerror (int);
+//char *strerror (int);
 
 
 void *__memrchr(const void *, int, size_t);
